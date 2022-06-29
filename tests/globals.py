@@ -1,0 +1,4 @@
+ga4gh = "aKF498dAxcJAqme6QYQ7EZ07-fiw8Kw2"
+trunc512 = "68a178f7c740c5c240aa67ba41843b119d3bf9f8b0f0ac36"
+md5 = "f1f8f4bf413b16ad135722aa4591043e"
+seq = "ACGT"

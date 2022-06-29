@@ -1,17 +1,21 @@
-from app import app
-from . import db
+# from app import app
+# from . import db
+import mimetypes
 from .orm import Refget
 from .utils import ga4gh_to_trunc512
-from flask import abort, request, Response, jsonify
+from flask import request, Response, jsonify, current_app
 import re
+from flask import Blueprint
+
+refget_blueprint = Blueprint("refget_blueprint", __name__)
 
 
-@app.route("/")
+@refget_blueprint.route("/")
 def index():
     return "Hello"
 
 
-@app.route("/sequence/service-info", methods=["GET"])
+@refget_blueprint.route("/sequence/service-info", methods=["GET"])
 def service_info():
 
     data = {
@@ -19,22 +23,25 @@ def service_info():
             "circular_supported": True,
             "algorithms": ["md5", "ga4gh", "trunc512"],
             "subsequence_limit": None,
-            "supported_api_versions": [app.config["REFGET_VERSION"]],
+            "supported_api_versions": [current_app.config["REFGET_VERSION"]],
         }
     }
     return jsonify(data)
 
 
-@app.route("/sequence/<id>", methods=["GET"])
+@refget_blueprint.route("/sequence/<id>", methods=["GET"])
 def sequence(id):
-    rg = Refget(db.session)
+    rg = Refget()
     obj = rg.find_by_id(id)
     if obj == None:
         return "Not Found", 404
     circular = obj.circular
     seq_size = obj.size
 
-    if not request.accept_mimetypes.best_match(app.config["ACCEPTED_SEQUENCE_VND"]):
+    mimetype = request.accept_mimetypes.best_match(
+        current_app.config["ACCEPTED_SEQUENCE_VND"]
+    )
+    if not mimetype:
         return "Invalid encoding", 406
 
     # Have a header but not range object, range is bad
@@ -93,15 +100,15 @@ def sequence(id):
     )
 
 
-@app.route("/sequence/<id>/metadata", methods=["GET"])
+@refget_blueprint.route("/sequence/<id>/metadata", methods=["GET"])
 def metadata(id):
     accept_match = request.accept_mimetypes.best_match(
-        app.config["ACCEPTED_METADATA_VND"]
+        current_app.config["ACCEPTED_METADATA_VND"]
     )
     if not accept_match:
         return "Invalid encoding", 406
 
-    rg = Refget(db.session)
+    rg = Refget()
     obj = rg.find_by_id(id)
     if obj == None:
         return "Not Found", 404

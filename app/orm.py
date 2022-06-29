@@ -1,11 +1,12 @@
 from . import models as m
+from .models import db
 from sqlalchemy import func
 from .utils import trunc512_to_ga4gh
 
 
 class Refget:
-    def __init__(self, session) -> None:
-        self.session = session
+    def __init__(self) -> None:
+        self.session = db.session
 
     """
 	Search for a sequence by an identifier. Supports ga4gh:SQ., md5 or another CURIE formatted ID e.g. refseq:NM_001354609.2

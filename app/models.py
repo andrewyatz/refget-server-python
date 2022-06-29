@@ -12,13 +12,14 @@ from sqlalchemy.orm import (
     relationship,
     validates,
 )
+from flask_sqlalchemy import SQLAlchemy
 
 import hashlib
-from app import db
 from ga4gh.core import sha512t24u
 
-# create declarative_base instance
+
 Base = declarative_base()
+db = SQLAlchemy()
 
 
 class RawSeq(db.Model):

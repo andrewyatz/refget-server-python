@@ -19,7 +19,8 @@ class Config:
         f"text/vnd.ga4gh.refget.v{REFGET_VERSION}+plain",
         f"text/vnd.ga4gh.refget.v{REFGET_VERSION}+plain",
         f"text/vnd.ga4gh.refget.v1.0.0+plain",
-        f"text/vnd.ga4gh.refget.v1.0.0+plain; charset=us-ascii" "text/plain",
+        f"text/vnd.ga4gh.refget.v1.0.0+plain; charset=us-ascii",
+        "text/plain",
     ]
     ACCEPTED_METADATA_VND = [
         JSON_CONTENT_TYPE_VND,
