@@ -1,5 +1,3 @@
-# from app import app
-# from . import db
 import mimetypes
 from .orm import Refget
 from .utils import ga4gh_to_trunc512
@@ -12,21 +10,41 @@ refget_blueprint = Blueprint("refget_blueprint", __name__)
 
 @refget_blueprint.route("/")
 def index():
-    return "Hello"
+    return "I am alive"
 
 
 @refget_blueprint.route("/sequence/service-info", methods=["GET"])
 def service_info():
 
-    data = {
-        "service": {
-            "circular_supported": True,
-            "algorithms": ["md5", "ga4gh", "trunc512"],
-            "subsequence_limit": None,
-            "supported_api_versions": [current_app.config["REFGET_VERSION"]],
-        }
+    cfg = current_app.config["SERVICE_INFO"]
+
+    service_info = {
+        "id": "org.ga4gh.refget",
+        "name": cfg["NAME"],
+        "type": {
+            "group": "org.ga4gh",
+            "artifact": "refget",
+            "version": current_app.config["REFGET_VERSION"],
+        },
+        "description": "Reference sequences from checksums",
+        "organization": {
+            "name": cfg["ORGANIZATION"]["NAME"],
+            "url": cfg["ORGANIZATION"]["URL"],
+        },
+        "contactUrl": cfg["CONTACT_URL"],
+        "documentationUrl": cfg["DOCUMENTATION_URL"],
+        "createdAt": cfg["CREATED_AT"],
+        "updatedAt": cfg["UPDATED_AT"],
+        "environment": cfg["ENVIRONMENT"],
+        "version": current_app.config["REFGET_VERSION"],
+        "refget": {
+            "circular_supported": cfg["REFGET"]["CIRCULAR_SUPPORTED"],
+            "subsequence_limit": cfg["REFGET"]["SUBSEQUENCE_LIMIT"],
+            "algorithms": cfg["REFGET"]["ALGORITHMS"],
+            "identifier_types": cfg["REFGET"]["IDENTIFIER_TYPES"],
+        },
     }
-    return jsonify(data)
+    return jsonify(service_info)
 
 
 @refget_blueprint.route("/sequence/<id>", methods=["GET"])
@@ -116,7 +134,7 @@ def metadata(id):
     data = {
         "length": obj.size,
         "md5": obj.md5,
-        "ga4gh": f"ga4gh.SQ:{obj.ga4gh}",
+        "ga4gh": f"ga4gh:SQ.{obj.ga4gh}",
         "id": id,
     }
 
