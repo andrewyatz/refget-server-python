@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "refget-server-python"
+version = "0.1.0"
+description = "Reference implementation of refget v2.0.0"
+authors = ["Andrew Yates <ayates@ebi.ac.uk>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+alembic = "^1.8.0"
+SQLAlchemy = "^1.4.37"
+"ga4gh.vrs" = "^0.7.6"
+Flask = "^2.1.2"
+Flask-SQLAlchemy = "^2.5.1"
+
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+coverage = "^6.4.1"
+Flask-Testing = "^0.8.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
