@@ -59,7 +59,7 @@ class Seq(db.Model):
 
     def build_from_seq(seq: str, circular=False):
         ga4gh = sha512t24u(seq.encode("utf-8"))
-        md5 = hashlib.md5(seq.encode("utf-8")).hexdigest()
+        md5 = hashlib.md5(seq.encode("utf-8")).hexdigest().lower()
         size = len(seq)
         return Seq(md5=md5, ga4gh=ga4gh, size=size, circular=circular)
 

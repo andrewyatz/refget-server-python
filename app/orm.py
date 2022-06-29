@@ -23,7 +23,7 @@ class Refget:
             return self.find_molecule(split_id, authority)
         # Assume md5
         elif len(id) == 32:
-            return self.session.query(m.Seq).filter(m.Seq.md5 == id).first()
+            return self.session.query(m.Seq).filter(m.Seq.md5 == id.lower()).first()
         # Test if it is trunc512 and give backwards compatability
         elif len(id) == 48:
             ga4gh = trunc512_to_ga4gh(id)
