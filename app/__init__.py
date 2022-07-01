@@ -6,8 +6,11 @@ import os
 # Import Flask
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from app.views import refget_blueprint
 from .models import db
+
+migrate = Migrate()
 
 
 def create_app(config=None):
@@ -23,4 +26,5 @@ def create_app(config=None):
         app.config.from_object(config)
 
     db.init_app(app)
+    migrate.init_app(app, db, "migrations")
     return app
