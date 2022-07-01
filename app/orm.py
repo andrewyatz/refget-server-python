@@ -20,7 +20,10 @@ class Refget:
         # Assume authority ID query
         elif ":" in id:
             authority, split_id = id.split(":")
-            return self.find_molecule(split_id, authority)
+            molecule = self.find_molecule(split_id, authority)
+            if molecule is None:
+                return None
+            return molecule.seq
         # Assume md5
         elif len(id) == 32:
             return self.session.query(m.Seq).filter(m.Seq.md5 == id.lower()).first()

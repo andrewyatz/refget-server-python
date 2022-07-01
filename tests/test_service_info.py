@@ -26,6 +26,7 @@ class MyTest(tests.base.BaseTest):
                     "trunc512",
                 ],
                 "identifier_types": [
+                    "insdc",
                     "none",
                 ],
             },

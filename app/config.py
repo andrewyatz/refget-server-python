@@ -45,6 +45,6 @@ class Config:
             "CIRCULAR_SUPPORTED": True,
             "SUBSEQUENCE_LIMIT": None,
             "ALGORITHMS": ["ga4gh", "md5", "trunc512"],
-            "IDENTIFIER_TYPES": ["none"],
+            "IDENTIFIER_TYPES": ["insdc", "none"],
         },
     }
