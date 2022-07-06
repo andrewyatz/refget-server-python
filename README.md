@@ -15,6 +15,18 @@ $ FLASK_APP=run.py poetry run flask run
  * Running on http://127.0.0.1:5000 (Press CTRL+C to quit)
 ```
 
+## Running in dev mode
+```bash
+$ FLASK_ENV=development FLASK_APP=run.py poetry run flask run
+ * Serving Flask app 'run.py' (lazy loading)
+ * Environment: development
+ * Debug mode: on
+ * Running on http://127.0.0.1:5000 (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 305-952-899
+```
+
 ## Example server contents
 
 This will give you access to the server locally on port 5000 and has four sequences loaded
@@ -42,6 +54,24 @@ $ curl -s -H"Accept: application/json" "http://0.0.0.0:5000/sequence/insdc:NC_00
 ## Injecting new configuration
 
 The application's default configuration is held in `app/config.py`. You can provide another configuration file to override the existing values using the `REFGET_SETTINGS` environment variable.
+
+## Special config variables
+
+### `SQLALCHEMY_DATABASE_URI`
+
+Change the datbase connection settings
+
+### `SERVICE_INFO`
+
+Configure the service info returned from the code. Best to just duplicate and edit as you see fit
+
+### `STREAMED_CHUNKING_SIZE`
+
+Set to a value greater than 0 to enable streaming of sequences. Note doing this will result in executing substrings
+
+### `SQLALCHEMY_ECHO`
+
+Set to `True` to have SQLAlchemy emit the SQL it is generating. Useful to understand what's going on under the hood
 
 ## Moving to a new database
 
