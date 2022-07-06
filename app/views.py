@@ -14,9 +14,10 @@
 # limitations under the License.
 
 import mimetypes
+
 from .orm import Refget
 from .utils import ga4gh_to_trunc512
-from flask import request, Response, jsonify, current_app
+from flask import request, Response, jsonify, current_app, stream_with_context
 import re
 from flask import Blueprint
 
@@ -125,12 +126,34 @@ def sequence(id):
         if end > seq_size:
             return "Range Not Satisfiable", 416
 
-    sequence = rg.get_sequence(obj, start=start, end=end)
-    return Response(
-        sequence,
-        status=success,
-        content_type="text/vnd.ga4gh.refget.v2.0.0+plain; charset=us-ascii",
-    )
+    # You can provide a user block size or just take the streamed chunking size from the config
+    block_size = int(request.args.get("block_size", current_app.config['STREAMED_CHUNKING_SIZE']))
+    content_type = "text/vnd.ga4gh.refget.v2.0.0+plain; charset=us-ascii"
+    if block_size > 0:
+        if end is None:
+            end = seq_size
+        
+        @stream_with_context
+        def generate():
+            cur_start=start
+            continue_loop = True
+            while continue_loop:
+                with current_app.app_context():
+                    cur_end=cur_start+block_size
+                    if cur_end > end:
+                        cur_end = end
+                        continue_loop = False
+                    cur_seq = rg.get_sequence(obj, start=cur_start, end=cur_end)
+                    cur_start = cur_end
+                    yield cur_seq
+        return current_app.response_class(generate(), content_type=content_type)
+    else:
+        sequence = rg.get_sequence(obj, start=start, end=end)
+        return Response(
+            sequence,
+            status=success,
+            content_type=content_type,
+        )
 
 
 @refget_blueprint.route("/sequence/<id>/metadata", methods=["GET"])

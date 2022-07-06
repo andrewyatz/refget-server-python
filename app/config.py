@@ -24,6 +24,8 @@ class Config:
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    STREAMED_CHUNKING_SIZE = 0
+
     REFGET_VERSION = "2.0.0"
     TEXT_CONTENT_TYPE_VND = (
         f"text/vnd.ga4gh.refget.v{REFGET_VERSION}+plain; charset=us-ascii"
