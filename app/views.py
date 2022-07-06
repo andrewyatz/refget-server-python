@@ -127,25 +127,28 @@ def sequence(id):
             return "Range Not Satisfiable", 416
 
     # You can provide a user block size or just take the streamed chunking size from the config
-    block_size = int(request.args.get("block_size", current_app.config['STREAMED_CHUNKING_SIZE']))
+    block_size = int(
+        request.args.get("block_size", current_app.config["STREAMED_CHUNKING_SIZE"])
+    )
     content_type = "text/vnd.ga4gh.refget.v2.0.0+plain; charset=us-ascii"
     if block_size > 0:
         if end is None:
             end = seq_size
-        
+
         @stream_with_context
         def generate():
-            cur_start=start
+            cur_start = start
             continue_loop = True
             while continue_loop:
                 with current_app.app_context():
-                    cur_end=cur_start+block_size
+                    cur_end = cur_start + block_size
                     if cur_end > end:
                         cur_end = end
                         continue_loop = False
                     cur_seq = rg.get_sequence(obj, start=cur_start, end=cur_end)
                     cur_start = cur_end
                     yield cur_seq
+
         return current_app.response_class(generate(), content_type=content_type)
     else:
         sequence = rg.get_sequence(obj, start=start, end=end)
