@@ -89,13 +89,20 @@ Alembic can be run with the following command.
 $ REFGET_SETTINGS="path/to/new/config.py" FLASK_APP=run.py flask db upgrade
 ```
 
-### Populating database
+### Populating a database with new records
 
-This is currently not supported and is being worked on in `loader.py`.
+**Make sure you have created a new database first as noted in the previous section**. Loading is available through the `loader.py` variable. You can give this a FASTA file plus additional options (use `--help` to see all options).
+
+```bash
+REFGET_SETTINGS="path/to/new/config.py" poetry run python3 loader.py --fasta FILE --authority insdc --type dna
+```
+
+The script writes only the sequence records and molecules to your active database. The script has been tested but not extensively.
 
 # Regengerating the local SQLite compliance database
 
 ```bash
+rm compliance.sqlite3
 python3 create_compliance_database.py
 ```
 

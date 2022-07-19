@@ -36,6 +36,17 @@ tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)"
 tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "cloudpickle"]
 
 [[package]]
+name = "biopython"
+version = "1.79"
+description = "Freely available tools for computational molecular biology."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+numpy = "*"
+
+[[package]]
 name = "bioutils"
 version = "0.5.6"
 description = "miscellaneous simple bioinformatics utilities and lookup tables"
@@ -195,6 +206,14 @@ python-versions = "*"
 
 [package.dependencies]
 Flask = "*"
+
+[[package]]
+name = "functools"
+version = "0.5"
+description = "Fast tools for functional programming"
+category = "main"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "ga4gh.vrs"
@@ -579,7 +598,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "fa6159a88c477edf491897422c26b53ef18cdf68cf4f19f8609e196093e0ad4b"
+content-hash = "14f14578b2795e28c258227dba5d039361b1ef89ff512967b3960eb8fa2dbb2b"
 
 [metadata.files]
 alembic = [
@@ -594,6 +613,7 @@ attrs = [
     {file = "attrs-21.4.0-py2.py3-none-any.whl", hash = "sha256:2d27e3784d7a565d36ab851fe94887c5eccd6a463168875832a1be79c82828b4"},
     {file = "attrs-21.4.0.tar.gz", hash = "sha256:626ba8234211db98e869df76230a137c4c40a12d72445c45d5f5b716f076e2fd"},
 ]
+biopython = []
 bioutils = [
     {file = "bioutils-0.5.6-py2.py3-none-any.whl", hash = "sha256:53f3c2bd343bfb4596480be7bbe3ceb3ade570c68c3bba1ec1490c559871fba9"},
     {file = "bioutils-0.5.6.tar.gz", hash = "sha256:6ba5e991b091f61c60b586425b8266309127f5c825fd5a96d931a2fe030cc09e"},
@@ -681,6 +701,7 @@ flask-sqlalchemy = [
 flask-testing = [
     {file = "Flask-Testing-0.8.1.tar.gz", hash = "sha256:0a734d7b68e63a9410b413cd7b1f96456f9a858bd09a6222d465650cc782eb01"},
 ]
+functools = []
 "ga4gh.vrs" = [
     {file = "ga4gh.vrs-0.7.6-py2.py3-none-any.whl", hash = "sha256:3c00e0092183619572210f4cd983d86d817d27b22b69cab69c650b0e5f4057b6"},
     {file = "ga4gh.vrs-0.7.6.tar.gz", hash = "sha256:f049dfff5c2cc0fd07fb4e8aa310896dfec3cc9c0cb4e126e53fe3ef49891e66"},
