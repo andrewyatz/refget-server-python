@@ -65,3 +65,23 @@ class Config:
             "IDENTIFIER_TYPES": ["insdc", "none"],
         },
     }
+
+    CORS = {
+        "METHODS": ["GET", "HEAD", "OPTIONS"],
+        "ALLOW_HEADERS": [
+            "Content-Type",
+            "Authorization",
+            "X-Requested-With",
+            "api_key",
+            "Range",
+        ],
+        "EXPOSE_HEADERS": [
+            "Cache-Control",
+            "Content-Language",
+            "Content-Type",
+            "Expires",
+            "Last-Modified",
+            "Pragma",
+        ],
+        "MAX_AGE": 2592000,
+    }

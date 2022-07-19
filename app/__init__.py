@@ -22,6 +22,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_cors import CORS
 from app.views import refget_blueprint
 from .models import db
 
@@ -39,6 +40,15 @@ def create_app(config=None):
         app.config.from_envvar("REFGET_SETTINGS", silent=False)
     if config is not None:
         app.config.from_object(config)
+
+    cors_cfg = app.config["CORS"]
+    CORS(
+        app=app,
+        methods=cors_cfg["METHODS"],
+        allow_headers=cors_cfg["ALLOW_HEADERS"],
+        expose_headers=cors_cfg["EXPOSE_HEADERS"],
+        max_age=cors_cfg["MAX_AGE"],
+    )
 
     db.init_app(app)
     migrate.init_app(app, db, "migrations")

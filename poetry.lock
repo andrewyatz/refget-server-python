@@ -149,6 +149,18 @@ async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
 
 [[package]]
+name = "flask-cors"
+version = "3.0.10"
+description = "A Flask extension adding a decorator for CORS support"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Flask = ">=0.9"
+Six = "*"
+
+[[package]]
 name = "flask-migrate"
 version = "3.1.0"
 description = "SQLAlchemy database migrations for Flask applications using Alembic."
@@ -567,7 +579,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "782c481aef1717260ff291eab47146a4047d813ffc303732f85a210c5737d7c0"
+content-hash = "fa6159a88c477edf491897422c26b53ef18cdf68cf4f19f8609e196093e0ad4b"
 
 [metadata.files]
 alembic = [
@@ -657,6 +669,7 @@ flask = [
     {file = "Flask-2.1.2-py3-none-any.whl", hash = "sha256:fad5b446feb0d6db6aec0c3184d16a8c1f6c3e464b511649c8918a9be100b4fe"},
     {file = "Flask-2.1.2.tar.gz", hash = "sha256:315ded2ddf8a6281567edb27393010fe3406188bafbfe65a3339d5787d89e477"},
 ]
+flask-cors = []
 flask-migrate = [
     {file = "Flask-Migrate-3.1.0.tar.gz", hash = "sha256:57d6060839e3a7f150eaab6fe4e726d9e3e7cffe2150fb223d73f92421c6d1d9"},
     {file = "Flask_Migrate-3.1.0-py3-none-any.whl", hash = "sha256:a6498706241aba6be7a251078de9cf166d74307bca41a4ca3e403c9d39e2f897"},
