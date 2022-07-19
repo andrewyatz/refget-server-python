@@ -176,7 +176,6 @@ def metadata(id):
         "length": obj.size,
         "md5": obj.md5,
         "ga4gh": f"ga4gh:SQ.{obj.ga4gh}",
-        "id": id,
     }
 
     # Customise to support v1 metadata
