@@ -17,7 +17,14 @@ import mimetypes
 
 from .orm import Refget
 from .utils import ga4gh_to_trunc512
-from flask import request, Response, jsonify, current_app, stream_with_context
+from flask import (
+    request,
+    Response,
+    jsonify,
+    current_app,
+    stream_with_context,
+    render_template,
+)
 import re
 from flask import Blueprint
 
@@ -26,7 +33,8 @@ refget_blueprint = Blueprint("refget_blueprint", __name__)
 
 @refget_blueprint.route("/")
 def index():
-    return "I am alive"
+    # return "I am alive"
+    return render_template("index.html")
 
 
 @refget_blueprint.route("/sequence/service-info", methods=["GET"])

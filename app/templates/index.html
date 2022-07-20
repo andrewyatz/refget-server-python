@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='pico.min.css') }}">
+    <title>Refget version 2 - reference sequence retrieval implementation</title>
+</head>
+
+<body>
+    <main class="container">
+        <h1>Refget version 2 - reference sequence retrieval implementation</h1>
+        <h2>The specification</h2>
+        <p>Refget enables access to reference sequences using an identifier derived from the sequence itself or a unique
+            identifier. More information can be found from the <a
+                href='https://samtools.github.io/hts-specs/refget.html'>samtools hosted refget specification page</a>.
+            In addition an <a href='https://samtools.github.io/hts-specs/pub/refget-openapi.yaml'>OpenAPI 3.0 YAML
+                definition</a> is available. 
+            Or you can look at our <a href="https://w3id.org/ga4gh/refget">refget landing page</a>.</p>
+        <h2>URLs to get you started</h2>
+        <p>
+        <dl>
+            <dt>Example sub sequence</dt>
+            <dd><a
+                    href='/sequence/6681ac2f62509cfc220d78751b8dc524?start=0&end=10'><code>/sequence/6681ac2f62509cfc220d78751b8dc524?start=0&end=10</code></a>
+            </dd>
+            <dt>Example metadata</dt>
+            <dd><a
+                    href='/sequence/6681ac2f62509cfc220d78751b8dc524/metadata'><code>/sequence/6681ac2f62509cfc220d78751b8dc524/metadata</code></a>
+            </dd>
+            <dt>Service information</dt>
+            <dd><a href='/sequence/service-info'><code>/sequence/service-info</code></a></dd>
+        </dl>
+        </p>
+    </main>
+</body>
+
+</html>
