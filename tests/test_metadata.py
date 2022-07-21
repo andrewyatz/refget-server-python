@@ -27,7 +27,6 @@ class SequenceTests(tests.base.BaseTest):
         expected = {
             "md5": g.md5,
             "ga4gh": g.ga4gh,
-            "id": g.ga4gh,
             "length": len(g.seq),
             "aliases": [{"alias": g.sequence_id, "naming_authority": g.authority}],
         }
