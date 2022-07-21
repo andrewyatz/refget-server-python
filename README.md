@@ -103,15 +103,23 @@ The script writes only the sequence records and molecules to your active databas
 
 ```bash
 rm compliance.sqlite3
-python3 create_compliance_database.py
+poetry run python3 create_compliance_database.py
 ```
 
 This will use the local application's default settings, which is a file in the current directory called `compliance.sqlite3`.
 
+# Creating sequence reports
+
+Utilities are available to generate a report of the various supported checksums by refget in CSV format using the `fasta-to-report.py` tool. You can provide this a FASTA formatted file (gzipped or uncommpressed) and the code will output a CSV report. Additional command line options are available using `--help`.
+
+```bash
+poetry run python3 fasta-to-report.py --fasta INPUT.fa.gz 
+```
+
 # Running tests
 
 ```bash
-$ python -m unittest tests/*.py
+$ poetry run python -m unittest tests/*.py
 .........
 ----------------------------------------------------------------------
 Ran 9 tests in 0.286s

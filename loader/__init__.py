@@ -21,9 +21,14 @@ from Bio import SeqIO
 import sys
 
 
-def parse_fasta(fasta, args, rg):
+def guess_parser_from_filname(fasta):
     encoding = guess_type(fasta)[1]  # uses file extension
     _open = partial(gzip.open, mode="rt") if encoding == "gzip" else open
+    return _open
+
+
+def parse_fasta(fasta, args, rg):
+    _open = guess_parser_from_filname(fasta)
     limit = args.commit
     current_count = 0
     total = 0
