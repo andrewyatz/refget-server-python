@@ -113,7 +113,11 @@ This will use the local application's default settings, which is a file in the c
 Utilities are available to generate a report of the various supported checksums by refget in CSV format using the `fasta-to-report.py` tool. You can provide this a FASTA formatted file (gzipped or uncommpressed) and the code will output a CSV report. Additional command line options are available using `--help`.
 
 ```bash
-poetry run python3 fasta-to-report.py --fasta INPUT.fa.gz 
+$ poetry run python3 fasta-to-report.py --fasta compliance.fa.gz 
+id,ga4gh,md5
+I,ga4gh:SQ.lZyxiD_ByprhOUzrR1o1bq0ezO_1gkrn,6681ac2f62509cfc220d78751b8dc524
+NC_001422.1,ga4gh:SQ.IIXILYBQCpHdC4qpI3sOQ_HAeAm9bmeF,3332ed720ac7eaa9b3655c06f6b9e196
+VI,ga4gh:SQ.z-qJgWoacRBV77zcMgZN9E_utrdzmQsH,b7ebc601f9a7df2e1ec5863deeae88a3
 ```
 
 # Running tests
