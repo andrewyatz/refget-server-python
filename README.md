@@ -99,7 +99,7 @@ REFGET_SETTINGS="path/to/new/config.py" poetry run python3 loader.py --fasta FIL
 
 The script writes only the sequence records and molecules to your active database. The script has been tested but not extensively.
 
-# Regengerating the local SQLite compliance database
+# Regenerating the local SQLite compliance database
 
 ```bash
 rm compliance.sqlite3
