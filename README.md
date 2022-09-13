@@ -1,6 +1,11 @@
 # Refget Server - Python
 
-A reimplementation of the Refget standard using Python. This tool uses 
+An implementation of the Refget v2.0.0 standard using Python. This tool uses:
+
+- Flask
+- SQLAlchemy
+- ga4gh.vrs
+- biopython
 
 # Running the example server
 
