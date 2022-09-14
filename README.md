@@ -2,6 +2,7 @@
 
 An implementation of the Refget v2.0.0 standard using Python. This tool uses:
 
+- Poetry
 - Flask
 - SQLAlchemy
 - ga4gh.vrs
