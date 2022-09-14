@@ -1,6 +1,12 @@
 # Refget Server - Python
 
-A reimplementation of the Refget standard using Python. This tool uses 
+An implementation of the Refget v2.0.0 standard using Python. This tool uses:
+
+- Poetry
+- Flask
+- SQLAlchemy
+- ga4gh.vrs
+- biopython
 
 # Running the example server
 
@@ -99,7 +105,7 @@ REFGET_SETTINGS="path/to/new/config.py" poetry run python3 loader.py --fasta FIL
 
 The script writes only the sequence records and molecules to your active database. The script has been tested but not extensively.
 
-# Regengerating the local SQLite compliance database
+# Regenerating the local SQLite compliance database
 
 ```bash
 rm compliance.sqlite3
