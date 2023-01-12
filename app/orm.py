@@ -39,6 +39,9 @@ class Refget:
             if molecule is None:
                 return None
             return molecule.seq
+        elif "SQ." in id:
+            ga4gh = id.replace("SQ.", "")
+            return self.session.query(m.Seq).filter(m.Seq.ga4gh == ga4gh).first()
         # Assume md5
         elif len(id) == 32:
             return self.session.query(m.Seq).filter(m.Seq.md5 == id.lower()).first()
