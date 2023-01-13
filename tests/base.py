@@ -43,24 +43,47 @@ class BaseTest(TestCase):
         db.drop_all()
 
     def assert_basic_sequence(
-        self, id, status_code=200, seq=None, content_type="text/plain", query_string={}
+        self,
+        id,
+        status_code=200,
+        seq=None,
+        content_type="text/plain",
+        range=None,
+        query_string={},
     ):
+        headers = {"Accept": content_type}
+        if range is not None:
+            headers["Range"] = range
         response = self.client.get(
             f"/sequence/{id}",
-            headers={"Accept": content_type},
+            headers=headers,
             query_string=query_string,
         )
         self.assertEqual(response.status_code, status_code)
         if seq is not None:
             self.assertEqual(response.get_data(as_text=True), seq)
 
+    def assert_basic_metadata(
+        self,
+        id,
+        status_code=200,
+        expected=None,
+        content_type="application/json",
+        query_string={},
+    ):
+        response = self.client.get(
+            f"/sequence/{id}/metadata",
+            headers={"Accept": content_type},
+            query_string=query_string,
+        )
+        self.assertEqual(response.status_code, status_code)
+        if expected is not None:
+            self.assertEqual(response.json, {"metadata": expected})
+
     def assert_range_sequence(
         self, id, start, end, seq=None, content_type="text/plain", status_code=206
     ):
         range = f"bytes={start}-{end}"
-        response = self.client.get(
-            f"/sequence/{id}", headers={"Accept": content_type, "Range": range}
+        self.assert_basic_sequence(
+            id, status_code=status_code, content_type=content_type, seq=seq, range=range
         )
-        self.assertEqual(response.status_code, status_code)
-        if seq is not None:
-            self.assertEqual(response.get_data(as_text=True), seq)

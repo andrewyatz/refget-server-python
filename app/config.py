@@ -45,8 +45,10 @@ class Config:
         JSON_CONTENT_TYPE_VND,
         f"application/vnd.ga4gh.refget.v{REFGET_VERSION}+json",
         f"application/vnd.ga4gh.refget.v{REFGET_VERSION}+json",
-        f"application/vnd.ga4gh.refget.v1.0.0+json",
-        f"application/vnd.ga4gh.refget.v1.0.0+json; charset=us-ascii",
+        "application/vnd.ga4gh.refget.v1.0.0+json",
+        "application/vnd.ga4gh.refget.v1.0.0+json; charset=us-ascii",
+        "application/vnd.ga4gh.refget.v1.0.1+json",
+        "application/vnd.ga4gh.refget.v1.0.1+json; charset=us-ascii",
         "application/json",
     ]
     SERVICE_INFO = {

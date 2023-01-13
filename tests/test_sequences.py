@@ -38,6 +38,9 @@ class SequenceTests(tests.base.BaseTest):
         self.assert_basic_sequence_fetch(
             g.ga4gh, content_type="text/vnd.ga4gh.refget.v2.0.0+plain; charset=us-ascii"
         )
+        self.assert_basic_sequence(
+            g.ga4gh, status_code=200, query_string={"block_size": 2}
+        )
 
     def assert_basic_sequence_fetch(self, id, content_type="text/plain"):
         self.assert_basic_sequence(
@@ -60,7 +63,19 @@ class SequenceTests(tests.base.BaseTest):
 
     def test_get_range_sequence_fetch(self):
         self.assert_range_sequence(g.ga4gh, 0, 2, "ACG")
+        self.assert_range_sequence(g.ga4gh, 0, 2, "ACG")
         self.assert_range_sequence(g.ga4gh, 0, 4, "ACGT")
+
+    def test_bad_range_sequence_fetch(self):
+        self.assert_range_sequence(g.ga4gh, -1, 2, status_code=400)
+        self.assert_range_sequence(g.ga4gh, 1, -2, status_code=400)
+        self.assert_range_sequence(g.ga4gh, 5, 2, status_code=416)
+        self.assert_range_sequence(g.ga4gh, 4, 4, status_code=416)
+        self.assert_basic_sequence(g.ga4gh, status_code=400, range="wibble=1-2")
+        self.assert_basic_sequence(g.ga4gh, status_code=400, range="bytes=1-")
+        self.assert_basic_sequence(g.ga4gh, status_code=400, range="bytes=1-")
+        self.assert_basic_sequence(g.ga4gh, status_code=400, range="bytes=-1-2")
+        self.assert_basic_sequence(g.ga4gh, status_code=400, range="bytes=a-a")
 
 
 if __name__ == "__main__":

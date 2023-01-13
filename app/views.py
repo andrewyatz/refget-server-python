@@ -187,7 +187,7 @@ def metadata(id):
     }
 
     # Customise to support v1 metadata
-    if "vnd.ga4gh.refget.v1.0.0" in accept_match:
+    if "vnd.ga4gh.refget.v1" in accept_match:
         data["trunc512"] = ga4gh_to_trunc512(obj.ga4gh)
 
     data["aliases"] = list(map(_create_aliases, obj.molecules))
