@@ -136,3 +136,11 @@ Ran 9 tests in 0.286s
 
 OK
 ```
+
+## Test coverage
+
+```bash
+$ poetry run coverage run -m unittest tests/*.py
+$ poetry run coverage html
+$ open htmlcov/index.html
+```
