@@ -35,7 +35,7 @@ class BaseTest(TestCase):
     def setUp(self):
         db.create_all()
         with db.session.begin():
-            seq, mol = data.create(g.seq, g.sequence_id, g.authority, "dna", False)
+            seq, mol = data.create(g.seq, g.sequence_id, g.authority, g.seq_type, False)
             db.session.add_all([seq, mol])
 
     def tearDown(self):

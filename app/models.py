@@ -102,7 +102,7 @@ class Molecule(db.Model):
         elif attribute == "size":
             return self.seq.size
         elif attribute == "ga4gh":
-            return self.seq.size
+            return self.seq.ga4gh
         elif attribute == "md5":
             return self.seq.md5
         raise AttributeError(f"'Molecule' object has no attribute '{attribute}'")
