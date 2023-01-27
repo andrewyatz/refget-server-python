@@ -23,3 +23,9 @@ class RootTests(tests.base.BaseTest):
     def test_root(self):
         response = self.client.get(f"/")
         self.assertEqual(response.status_code, 200)
+
+
+if __name__ == "__main__":
+    import unittest
+
+    unittest.main()

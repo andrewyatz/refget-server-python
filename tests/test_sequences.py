@@ -16,8 +16,6 @@
 import tests.globals as g
 import tests.base
 
-import app
-
 
 class SequenceTests(tests.base.BaseTest):
     def test_sequence(self):
@@ -69,7 +67,7 @@ class SequenceTests(tests.base.BaseTest):
     def test_bad_range_sequence_fetch(self):
         self.assert_range_sequence(g.ga4gh, -1, 2, status_code=400)
         self.assert_range_sequence(g.ga4gh, 1, -2, status_code=400)
-        self.assert_range_sequence(g.ga4gh, 5, 2, status_code=416)
+        self.assert_range_sequence(g.ga4gh, 3, 2, status_code=416)
         self.assert_range_sequence(g.ga4gh, 4, 4, status_code=416)
         self.assert_basic_sequence(g.ga4gh, status_code=400, range="wibble=1-2")
         self.assert_basic_sequence(g.ga4gh, status_code=400, range="bytes=1-")
@@ -77,6 +75,26 @@ class SequenceTests(tests.base.BaseTest):
         self.assert_basic_sequence(g.ga4gh, status_code=400, range="bytes=-1-2")
         self.assert_basic_sequence(g.ga4gh, status_code=400, range="bytes=a-a")
 
+    def test_bad_url_parameter_fetch(self):
+        self.assert_basic_sequence(
+            g.ga4gh, query_string={"start": "wibble", "end": 1}, status_code=400
+        )
+        self.assert_basic_sequence(
+            g.ga4gh, query_string={"start": 0, "end": "wibble"}, status_code=400
+        )
+        self.assert_basic_sequence(
+            g.ga4gh, query_string={"start": -1, "end": 1}, status_code=400
+        )
+        self.assert_basic_sequence(
+            g.ga4gh, query_string={"start": -20, "end": -1}, status_code=400
+        )
+        self.assert_basic_sequence(g.ga4gh, query_string={"end": -1}, status_code=416)
+        self.assert_basic_sequence(
+            g.ga4gh, query_string={"start": 0, "end": 100}, status_code=416
+        )
+
 
 if __name__ == "__main__":
+    import unittest
+
     unittest.main()

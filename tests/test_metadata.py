@@ -46,3 +46,9 @@ class SequenceTests(tests.base.BaseTest):
         self.assert_basic_metadata(
             id=g.ga4gh, status_code=406, content_type="plain/text"
         )
+
+
+if __name__ == "__main__":
+    import unittest
+
+    unittest.main()

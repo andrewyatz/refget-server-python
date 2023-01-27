@@ -48,3 +48,9 @@ class MyTest(tests.base.BaseTest):
         }
         self.assert200(response)
         self.assertEqual(response.json, expected)
+
+
+if __name__ == "__main__":
+    import unittest
+
+    unittest.main()

@@ -32,3 +32,9 @@ class TestUtils(unittest.TestCase):
         seq = Seq.build_from_seq(g.seq)
         self.assertEqual(seq.ga4gh, g.sha512t24u)
         self.assertEqual(seq.md5, g.md5)
+
+
+if __name__ == "__main__":
+    import unittest
+
+    unittest.main()
