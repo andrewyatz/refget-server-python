@@ -22,6 +22,7 @@ class SequenceTests(tests.base.BaseTest):
         self.assert_basic_sequence_fetch(g.ga4gh)
         self.assert_basic_sequence_fetch(g.sq)
         self.assert_basic_sequence_fetch(g.md5)
+        self.assert_basic_sequence_fetch(f"md5:{g.md5}")
         self.assert_basic_sequence_fetch(g.md5.upper())
         self.assert_basic_sequence_fetch(g.trunc512)
         self.assert_basic_sequence_fetch(g.trunc512.upper())

@@ -32,6 +32,10 @@ class Refget:
         if "ga4gh:SQ." in id:
             ga4gh = id.replace("ga4gh:SQ.", "")
             return self.session.query(m.Seq).filter(m.Seq.ga4gh == ga4gh).first()
+        # It is md5 then
+        elif "md5:" in id:
+            md5 = id.replace("md5:", "")
+            return self.session.query(m.Seq).filter(m.Seq.md5 == md5.lower()).first()
         # Assume authority ID query
         elif ":" in id:
             authority, split_id = id.split(":")
