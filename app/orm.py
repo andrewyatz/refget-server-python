@@ -31,10 +31,14 @@ class Refget:
         # Trigger ga4gh checks
         if "ga4gh:SQ." in id:
             ga4gh = id.replace("ga4gh:SQ.", "")
+            if (len(ga4gh) != 32):
+                return None
             return self.session.query(m.Seq).filter(m.Seq.ga4gh == ga4gh).first()
         # It is md5 then
         elif "md5:" in id:
             md5 = id.replace("md5:", "")
+            if (len(md5) != 32):
+                return None
             return self.session.query(m.Seq).filter(m.Seq.md5 == md5.lower()).first()
         # Assume authority ID query
         elif ":" in id:
@@ -45,6 +49,8 @@ class Refget:
             return molecule.seq
         elif "SQ." in id:
             ga4gh = id.replace("SQ.", "")
+            if (len(ga4gh) != 32):
+                return None
             return self.session.query(m.Seq).filter(m.Seq.ga4gh == ga4gh).first()
         # Assume md5
         elif len(id) == 32:
