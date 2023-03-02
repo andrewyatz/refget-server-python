@@ -183,7 +183,7 @@ def metadata(id):
     data = {
         "length": obj.size,
         "md5": obj.md5,
-        "ga4gh": f"ga4gh:SQ.{obj.ga4gh}",
+        "ga4gh": f"SQ.{obj.ga4gh}",
     }
 
     # Customise to support v1 metadata

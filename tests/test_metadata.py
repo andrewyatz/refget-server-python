@@ -24,7 +24,7 @@ class SequenceTests(tests.base.BaseTest):
     def test_metadata(self):
         expected = {
             "md5": g.md5,
-            "ga4gh": g.ga4gh,
+            "ga4gh": g.sq,
             "length": len(g.seq),
             "aliases": [{"alias": g.sequence_id, "naming_authority": g.authority}],
         }

@@ -30,7 +30,7 @@ def run():
             seq = str(record.seq).encode("ASCII")
             sha512sum = sha512t24u(seq)
             md5sum = md5(seq).hexdigest()
-            row = [id, f"ga4gh:SQ.{sha512sum}", md5sum]
+            row = [id, f"SQ.{sha512sum}", md5sum]
             if args.trunc512:
                 trunc512sum = ga4gh_to_trunc512(sha512sum)
                 row.append(trunc512sum)
