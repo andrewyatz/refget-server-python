@@ -21,6 +21,7 @@ FROM python as runtime
 ENV PATH="/app/.venv/bin:$PATH"
 COPY --from=poetry /app /app
 RUN find /app | grep -E "(__pycache__|\.pyc$)" | xargs rm -rf
+RUN rm -rf htmlcov .coverage .vscode
 ENV FLASK_APP="run.py"
 EXPOSE 8080
 # ENTRYPOINT [ python3" ]
