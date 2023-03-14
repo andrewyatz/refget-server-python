@@ -153,15 +153,18 @@ $ open htmlcov/index.html
 - BK006940.2 (md5:b7ebc601f9a7df2e1ec5863deeae88a3): _S.cer_ chromosome IV
 - NC_001422.1 (md5:3332ed720ac7eaa9b3655c06f6b9e196): _Enterobacteria phage phiX174 sensu lato_
 
+The Docker image is built to run a flask server on `0.0.0.0:8080`, which our fly.toml is configured to map external ports to.
+
 ## Making a first release
 
 ```bash
-# Loginto Fly
+# Log into Fly
 $ flyctl auth login
 
 # Initalise
 $ flyctl init
 
+# Finally deploy the application
 $ flyctl deploy
 ```
 
@@ -170,3 +173,13 @@ $ flyctl deploy
 ```bash
 flyctl deploy
 ```
+
+## Testing the Docker build process
+
+To initate a local build of the Docker image you can use the following commands
+
+```bash
+docker build -t test/refgetv2 .
+```
+
+Note it is important to use the root directory context else the image will not build correctly.
