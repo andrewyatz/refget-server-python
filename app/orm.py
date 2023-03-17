@@ -167,3 +167,24 @@ class Refget:
         else:
             instance = model(**kwargs)
             return instance
+    
+    """
+    Return basic statistics about the running Refget instance
+    """
+    def stats(self):
+        seqs = self._get_count(m.Seq.seq_id)
+        molecules = self._get_count(m.Molecule.molecule_id)
+        stats = {"counts" : { "seqs" : seqs, "molecules" : molecules } }
+        return stats
+
+    """
+    Optimised count method
+
+    Params:
+        column: The column to perform the count on. Best to use the primary key
+    
+    Returns:
+        Count of records from the table as an int
+    """
+    def _get_count(self, column):
+        return self.session.query(func.count(column)).scalar()
