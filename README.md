@@ -145,6 +145,30 @@ $ poetry run coverage html
 $ open htmlcov/index.html
 ```
 
+# Relationship to refget-server-perl
+
+[refget-server-perl](https://github.com/andrewyatz/refget-server-perl) was the first standalone open source reference implementation of the refget protocol and supports version 1 only. This implementation supports version 2 only. No migration path is offered between refget-server-perl and refget-server-python as their schemas and design differ slightly.  Specifically:
+
+- Sequence storage
+   - refget-server-perl allowed customisation of the sequence storage layer allowing metadata to be stored in a RDMBS and sequence held on disk, in a RDBMS or redis
+   - refget-server-python stores all sequence in the RDBMS alongside metadata
+- Schema
+   - refget-server-perl included tables which allowed tracking of release, source species, assembly and sequence synonyms
+   - refget-server-python has a much simpler model only covering sequences, instances of those sequences (called molecules), molecule type and authority
+
+In summary this implementation does far less than the refget-server-perl implementation. To migrate data between the versions either re-run sequence loading into the new schema or migrate data as specified below.
+
+| refget-server-perl table | refget-server-python table | Migration notes                                                                                           |
+| ------------------------ | -------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `raw_seq`                | `raw_seq`                  | Checksum column in python is just the `sha512t24u` checksum                                               |
+| `seq`                    | `seq`                      | `trunc512` is replaced by `ga4gh` and this is `sha512t24u` (see above)                                    |
+| `molecule`               | `molecule`                 | `source`is now `authority` and `mol_type` is replaced with `seq_type` and no support for release tracking |
+| `mol_type`               | `seq_type`                 | One to one replacement                                                                                    |
+| `source`                 | `authority`                | One to one replacement                                                                                    |
+| `division`               | None                       |                                                                                                           |
+| `release`                | None                       |                                                                                                           |
+| `synonym`                | None                       |                                                                                                           |
+
 # Creating fly deployments
 
 [Fly.io](https://fly.io/) is an alternative to heroku for Platform as a Service (PaaS). We deploy the [reference deployment of the Python Refget Server v2](https://refgetv2.fly.dev/) on Fly using Docker images. This is controlled by a local [fly.toml](fly.toml) which sets up a basic server and will use the [Dockerfile](Dockerfile) to build the and run the compliance server which is pre-loaded with the following sequences:
