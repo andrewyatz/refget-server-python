@@ -29,7 +29,11 @@ def upgrade():
     op.create_table(
         "raw_seq",
         sa.Column("ga4gh", sa.String(length=32), nullable=False),
-        sa.Column("seq", sa.String(length=4000000000).with_variant(mysql.LONGTEXT(), "mysql"), nullable=False),
+        sa.Column(
+            "seq",
+            sa.String(length=4000000000).with_variant(mysql.LONGTEXT(), "mysql"),
+            nullable=False,
+        ),
         sa.PrimaryKeyConstraint("ga4gh"),
     )
     op.create_table(

@@ -31,13 +31,13 @@ class Refget:
         # Trigger ga4gh checks
         if "ga4gh:SQ." in id:
             ga4gh = id.replace("ga4gh:SQ.", "")
-            if (len(ga4gh) != 32):
+            if len(ga4gh) != 32:
                 return None
             return self.session.query(m.Seq).filter(m.Seq.ga4gh == ga4gh).first()
         # It is md5 then
         elif "md5:" in id:
             md5 = id.replace("md5:", "")
-            if (len(md5) != 32):
+            if len(md5) != 32:
                 return None
             return self.session.query(m.Seq).filter(m.Seq.md5 == md5.lower()).first()
         # Assume authority ID query
@@ -49,7 +49,7 @@ class Refget:
             return molecule.seq
         elif "SQ." in id:
             ga4gh = id.replace("SQ.", "")
-            if (len(ga4gh) != 32):
+            if len(ga4gh) != 32:
                 return None
             return self.session.query(m.Seq).filter(m.Seq.ga4gh == ga4gh).first()
         # Assume md5
@@ -167,14 +167,15 @@ class Refget:
         else:
             instance = model(**kwargs)
             return instance
-    
+
     """
     Return basic statistics about the running Refget instance
     """
+
     def stats(self):
         seqs = self._get_count(m.Seq.seq_id)
         molecules = self._get_count(m.Molecule.molecule_id)
-        stats = {"counts" : { "seqs" : seqs, "molecules" : molecules } }
+        stats = {"counts": {"seqs": seqs, "molecules": molecules}}
         return stats
 
     """
@@ -186,5 +187,6 @@ class Refget:
     Returns:
         Count of records from the table as an int
     """
+
     def _get_count(self, column):
         return self.session.query(func.count(column)).scalar()
