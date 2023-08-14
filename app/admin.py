@@ -27,6 +27,7 @@ from flask import Blueprint
 
 refget_admin_blueprint = Blueprint("refget_admin_blueprint", __name__)
 
+
 @refget_admin_blueprint.route("/stats")
 def stats():
     rg = Refget()
