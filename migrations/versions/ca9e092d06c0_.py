@@ -7,6 +7,7 @@ Create Date: 2022-07-01 11:37:25.375546
 """
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy.dialects import mysql
 
 
 # revision identifiers, used by Alembic.
@@ -21,14 +22,14 @@ def upgrade():
     op.create_table(
         "authority",
         sa.Column("authority_id", sa.Integer(), nullable=False),
-        sa.Column("name", sa.String(), nullable=False),
+        sa.Column("name", sa.String(length=255), nullable=False),
         sa.PrimaryKeyConstraint("authority_id"),
     )
     op.create_index(op.f("ix_authority_name"), "authority", ["name"], unique=True)
     op.create_table(
         "raw_seq",
         sa.Column("ga4gh", sa.String(length=32), nullable=False),
-        sa.Column("seq", sa.String(), nullable=False),
+        sa.Column("seq", sa.String(length=4000000000).with_variant(mysql.LONGTEXT(), "mysql"), nullable=False),
         sa.PrimaryKeyConstraint("ga4gh"),
     )
     op.create_table(
@@ -45,7 +46,7 @@ def upgrade():
     op.create_table(
         "seq_type",
         sa.Column("seq_type_id", sa.Integer(), nullable=False),
-        sa.Column("name", sa.String(), nullable=False),
+        sa.Column("name", sa.String(length=255), nullable=False),
         sa.PrimaryKeyConstraint("seq_type_id"),
     )
     op.create_index(op.f("ix_seq_type_name"), "seq_type", ["name"], unique=True)
@@ -53,7 +54,7 @@ def upgrade():
         "molecule",
         sa.Column("molecule_id", sa.Integer(), nullable=False),
         sa.Column("seq_id", sa.Integer(), nullable=True),
-        sa.Column("id", sa.String(), nullable=False),
+        sa.Column("id", sa.String(length=255), nullable=False),
         sa.Column("authority_id", sa.Integer(), nullable=True),
         sa.Column("seq_type_id", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(

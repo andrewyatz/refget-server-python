@@ -18,10 +18,12 @@ from sqlalchemy import (
     Column,
     Integer,
     String,
+    Text,
     Boolean,
     ForeignKey,
     UniqueConstraint,
 )
+from sqlalchemy.dialects import mysql
 from sqlalchemy.orm import (
     declarative_base,
     relationship,
@@ -40,7 +42,9 @@ db = SQLAlchemy()
 class RawSeq(db.Model):
     __tablename__ = "raw_seq"
     ga4gh = Column(String(32), primary_key=True)
-    seq = Column(String, nullable=False)
+    seq = Column(
+        Text(4000000000).with_variant(mysql.LONGTEXT(), "mysql"), nullable=False
+    )
 
 
 class Seq(db.Model):
@@ -72,11 +76,12 @@ class Seq(db.Model):
 		A Seq object populated with md5 & ga4gh identifiers
 	"""
 
-    def build_from_seq(seq: str, circular=False):
+    @classmethod
+    def build_from_seq(cls, seq: str, circular=False):
         ga4gh = sha512t24u(seq.encode("utf-8"))
         md5 = hashlib.md5(seq.encode("utf-8")).hexdigest().lower()
         size = len(seq)
-        return Seq(md5=md5, ga4gh=ga4gh, size=size, circular=circular)
+        return cls(md5=md5, ga4gh=ga4gh, size=size, circular=circular)
 
 
 class Molecule(db.Model):
@@ -84,7 +89,7 @@ class Molecule(db.Model):
 
     molecule_id = Column(Integer, primary_key=True)
     seq_id = Column(Integer, ForeignKey("seq.seq_id"))
-    id = Column(String, nullable=False)
+    id = Column(String(255), nullable=False)
     authority_id = Column(Integer, ForeignKey("authority.authority_id"))
     seq_type_id = Column(Integer, ForeignKey("seq_type.seq_type_id"))
 
@@ -119,7 +124,7 @@ class Authority(db.Model):
     __tablename__ = "authority"
 
     authority_id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False, index=True, unique=True)
+    name = Column(String(255), nullable=False, index=True, unique=True)
 
     @validates("name")
     def validates_name(self, key, value):
@@ -135,7 +140,7 @@ class SeqType(db.Model):
     __tablename__ = "seq_type"
 
     seq_type_id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False, index=True, unique=True)
+    name = Column(String(255), nullable=False, index=True, unique=True)
 
     @validates("name")
     def validates_name(self, key, value):
