@@ -33,7 +33,6 @@ refget_blueprint = Blueprint("refget_blueprint", __name__)
 
 @refget_blueprint.route("/")
 def index():
-    # return "I am alive"
     return render_template("index.html")
 
 
@@ -124,11 +123,11 @@ def sequence(id):
 
     if start < 0:
         return "Bad Request", 400
-    if not circular and not end is None and (start > end):
+    if not circular and end is not None and (start > end):
         return "Range Not Satisfiable", 416
     if start >= seq_size:
         return "Range Not Satisfiable", 416
-    if not end is None:
+    if end is not None:
         if end < 0:
             return "Bad Request", 400
         if end > seq_size:

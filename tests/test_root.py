@@ -21,7 +21,7 @@ import app
 
 class RootTests(tests.base.BaseTest):
     def test_root(self):
-        response = self.client.get(f"/")
+        response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
 
 
