@@ -49,17 +49,17 @@ class SequenceTests(tests.base.BaseTest):
     def test_bad_sequence(self):
         self.assert_basic_sequence("wibble", status_code=404)
         self.assert_basic_sequence(f"ga4gh.SQ:{g.sha512t24u}", status_code=404)
-        self.assert_basic_sequence(f"ga4gh.SQ:{g.sha512t24u}", status_code=404)
+        self.assert_basic_sequence("SQ.bogus", status_code=404)
         self.assert_basic_sequence(
             g.ga4gh, status_code=416, query_string={"start": 1000}
         )
         self.assert_basic_sequence(g.ga4gh, status_code=406, content_type="text/html")
-    
+
     def test_known_badly_formatted_ids(self):
         # Provide identifiers which have a known format (too short or too long)
-        self.assert_basic_sequence(f"md5:bogus", status_code=404)
-        self.assert_basic_sequence(f"ga4gh:SQ.bogus", status_code=404)
-        long_id = "X"*60
+        self.assert_basic_sequence("md5:bogus", status_code=404)
+        self.assert_basic_sequence("ga4gh:SQ.bogus", status_code=404)
+        long_id = "X" * 60
         self.assert_basic_sequence(f"ga4gh:SQ.{long_id}", status_code=404)
 
     def test_sequence_ranges(self):

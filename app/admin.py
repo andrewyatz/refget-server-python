@@ -13,19 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import tests.globals as g
-import tests.base
+import mimetypes
 
-import app
+from .orm import Refget
+from flask import (
+    request,
+    Response,
+    jsonify,
+    current_app,
+    render_template,
+)
+from flask import Blueprint
+
+refget_admin_blueprint = Blueprint("refget_admin_blueprint", __name__)
 
 
-class RootTests(tests.base.BaseTest):
-    def test_root(self):
-        response = self.client.get("/")
-        self.assertEqual(response.status_code, 200)
-
-
-if __name__ == "__main__":
-    import unittest
-
-    unittest.main()
+@refget_admin_blueprint.route("/stats")
+def stats():
+    rg = Refget()
+    return jsonify(rg.stats())

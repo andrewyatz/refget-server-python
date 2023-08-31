@@ -16,14 +16,20 @@
 import tests.globals as g
 import tests.base
 
-import app
-
-
-class RootTests(tests.base.BaseTest):
-    def test_root(self):
-        response = self.client.get("/")
+class AdminTests(tests.base.BaseTest):
+    def test_stats(self):
+        expected = {
+            "counts" : {
+                "seqs" : 1,
+                "molecules" : 1
+            }
+        }
+        response = self.client.get(
+            "/admin/stats",
+            headers={"Accept": "application/json"}
+        )
         self.assertEqual(response.status_code, 200)
-
+        self.assertEqual(response.json, expected)
 
 if __name__ == "__main__":
     import unittest

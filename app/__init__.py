@@ -24,6 +24,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from app.views import refget_blueprint
+from app.admin import refget_admin_blueprint
 from .models import db
 
 migrate = Migrate()
@@ -33,6 +34,7 @@ def create_app(config=None):
     # Inject Flask magic
     app = Flask(__name__)
     app.register_blueprint(refget_blueprint)
+    app.register_blueprint(refget_admin_blueprint, url_prefix="/admin")
 
     # Load configuration
     app.config.from_object("app.config.Config")

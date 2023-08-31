@@ -30,9 +30,9 @@ class OrmTest(tests.base.BaseTest):
             authority.name = "changed"
         self.assertTrue(rg.get_or_create(models.Authority, name=g.authority))
         with self.assertRaises(ValueError):
-            type = rg.session.query(models.SeqType).filter_by(name=g.seq_type).first()
-            self.assertIn(g.seq_type, str(type))
-            type.name = "changed"
+            seq_type = rg.session.query(models.SeqType).filter_by(name=g.seq_type).first()
+            self.assertIn(g.seq_type, str(seq_type))
+            seq_type.name = "changed"
 
     def test_large_objs(self):
         rg = orm.Refget()
