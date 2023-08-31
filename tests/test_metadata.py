@@ -16,7 +16,6 @@
 import tests.globals as g
 import tests.base
 
-import app
 import copy
 
 

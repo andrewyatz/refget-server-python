@@ -30,6 +30,9 @@ from flask import Blueprint
 
 refget_blueprint = Blueprint("refget_blueprint", __name__)
 
+INVALID_INPUT = "Invalid input"
+RANGE_NS = "Range Not Satisfiable"
+BAD_REQUEST = "Bad Request"
 
 @refget_blueprint.route("/")
 def index():
@@ -69,7 +72,6 @@ def service_info():
     }
     return jsonify(service_info)
 
-
 @refget_blueprint.route("/sequence/<id>", methods=["GET"])
 def sequence(id):
     rg = Refget()
@@ -90,21 +92,21 @@ def sequence(id):
     if raw_range and request.range is None:
         # But just check it was okay but the wrong way around i.e. start greater than end
         if re.match(r"^bytes=\d+-\d+$", raw_range):
-            return "Range Not Satisifable", 416
+            return RANGE_NS, 416
         return "Invalid request", 400
     # Can only run this if the range parses correctly
     if request.range:
         if "bytes=" not in raw_range:
-            return "Invalid input", 400
+            return INVALID_INPUT, 400
         (start, end) = request.range.ranges[0]
         if end is None:
-            return "Invalid input", 400
+            return INVALID_INPUT, 400
         if start < 0 or end < 0:
-            return "Invalid input", 400
+            return INVALID_INPUT, 400
         if start > end:
-            return "Range Not Satisfiable", 416
+            return RANGE_NS, 416
         if start >= seq_size:
-            return "Range Not Satisfiable", 416
+            return RANGE_NS, 416
         if end > seq_size:
             end = seq_size
         success = 206
@@ -112,26 +114,26 @@ def sequence(id):
         try:
             start = int(request.args.get("start", default=0))
         except ValueError:
-            return "Bad request", 400
+            return BAD_REQUEST, 400
         try:
             end = request.args.get("end", default=None)
             if end is not None:
                 end = int(end)
         except ValueError:
-            return "Bad request", 400
+            return BAD_REQUEST, 400
         success = 200
 
     if start < 0:
-        return "Bad Request", 400
+        return BAD_REQUEST, 400
     if not circular and end is not None and (start > end):
-        return "Range Not Satisfiable", 416
+        return RANGE_NS, 416
     if start >= seq_size:
-        return "Range Not Satisfiable", 416
+        return RANGE_NS, 416
     if end is not None:
         if end < 0:
-            return "Bad Request", 400
+            return BAD_REQUEST, 400
         if end > seq_size:
-            return "Range Not Satisfiable", 416
+            return RANGE_NS, 416
 
     # You can provide a user block size or just take the streamed chunking size from the config
     block_size = int(
