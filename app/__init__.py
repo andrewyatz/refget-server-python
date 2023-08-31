@@ -34,7 +34,6 @@ def create_app(config=None):
     # Inject Flask magic
     app = Flask(__name__)
     app.register_blueprint(refget_blueprint)
-    app.register_blueprint(refget_admin_blueprint, url_prefix="/admin")
 
     # Load configuration
     app.config.from_object("app.config.Config")
@@ -42,6 +41,10 @@ def create_app(config=None):
         app.config.from_envvar("REFGET_SETTINGS", silent=False)
     if config is not None:
         app.config.from_object(config)
+
+    # Also alter the loading of the admin component only if the config says to do so
+    if app.config.get("ADMIN_INTERFACE"):
+        app.register_blueprint(refget_admin_blueprint, url_prefix="/admin")
 
     cors_cfg = app.config["CORS"]
     CORS(

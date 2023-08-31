@@ -36,7 +36,7 @@ BAD_REQUEST = "Bad Request"
 
 @refget_blueprint.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", admin=current_app.config.get("ADMIN_INTERFACE"))
 
 
 @refget_blueprint.route("/sequence/service-info", methods=["GET"])

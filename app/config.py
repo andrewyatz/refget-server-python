@@ -87,3 +87,5 @@ class Config:
         ],
         "MAX_AGE": 2592000,
     }
+
+    ADMIN_INTERFACE = False

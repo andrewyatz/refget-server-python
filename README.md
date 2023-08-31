@@ -80,6 +80,10 @@ Set to a value greater than 0 to enable streaming of sequences. Note doing this 
 
 Set to `True` to have SQLAlchemy emit the SQL it is generating. Useful to understand what's going on under the hood
 
+#### `ADMIN_INTERFACE`
+
+Set to `True` to enable the internal admin interface. Currently admin has only one endpoint `/admin/stats` which reports counts of the sequences and molecules available.
+
 ### Moving to a new database
 
 We do not recommend using SQLite in production instances. Instead you should use something like MySQL or Postgres. To do this you should:

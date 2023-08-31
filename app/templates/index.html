@@ -17,9 +17,9 @@
                 href='https://samtools.github.io/hts-specs/refget.html'>samtools hosted refget specification page</a>.
             In addition an <a href='https://samtools.github.io/hts-specs/pub/refget-openapi.yaml'>OpenAPI 3.0 YAML
                 definition</a> is available. 
-            Or you can look at our <a href="https://w3id.org/ga4gh/refget">refget landing page</a>.</p>
+            Or you can look at our <a href="https://w3id.org/ga4gh/refget">refget landing page</a>.
+        </p>
         <h2>URLs to get you started</h2>
-        <p>
         <dl>
             <dt>Example sub sequence</dt>
             <dd><a
@@ -32,7 +32,13 @@
             <dt>Service information</dt>
             <dd><a href='/sequence/service-info'><code>/sequence/service-info</code></a></dd>
         </dl>
-        </p>
+        {% if admin %}
+        <h3>Admin URLs</h3>
+        <dl>
+            <dt>Sequence and molecule statistics</dt>
+            <dd><a href='/admin/stats'><code>/admin/stats</code></a></dd>
+        </dl>
+        {% endif %}
     </main>
 </body>
 
