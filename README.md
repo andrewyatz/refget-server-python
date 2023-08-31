@@ -8,7 +8,7 @@ An implementation of the Refget v2.0.0 standard using Python. This tool uses:
 - ga4gh.vrs
 - biopython
 
-# Running the example server
+## Running the example server
 
 ```bash
 $ poetry install
@@ -21,7 +21,8 @@ $ FLASK_APP=run.py poetry run flask run
  * Running on http://127.0.0.1:5000 (Press CTRL+C to quit)
 ```
 
-## Running in dev mode
+### Running in dev mode
+
 ```bash
 $ FLASK_ENV=development FLASK_APP=run.py poetry run flask run
  * Serving Flask app 'run.py' (lazy loading)
@@ -33,7 +34,7 @@ $ FLASK_ENV=development FLASK_APP=run.py poetry run flask run
  * Debugger PIN: 305-952-899
 ```
 
-## Example server contents
+### Example server contents
 
 This will give you access to the server locally on port 5000 and has four sequences loaded
 
@@ -55,31 +56,31 @@ $ curl -s -H"Accept: application/json" "http://0.0.0.0:5000/sequence/insdc:NC_00
 {"metadata":{"aliases":[{"alias":"NC_001422.1","naming_authority":"insdc"}],"ga4gh":"ga4gh:SQ.IIXILYBQCpHdC4qpI3sOQ_HAeAm9bmeF","id":"ga4gh:SQ.IIXILYBQCpHdC4qpI3sOQ_HAeAm9bmeF","length":5386,"md5":"3332ed720ac7eaa9b3655c06f6b9e196"}}
 ```
 
-# Customising the instance
+## Customising the instance
 
-## Injecting new configuration
+### Injecting new configuration
 
 The application's default configuration is held in `app/config.py`. You can provide another configuration file to override the existing values using the `REFGET_SETTINGS` environment variable.
 
-## Special config variables
+### Special config variables
 
-### `SQLALCHEMY_DATABASE_URI`
+#### `SQLALCHEMY_DATABASE_URI`
 
 Change the datbase connection settings
 
-### `SERVICE_INFO`
+#### `SERVICE_INFO`
 
 Configure the service info returned from the code. Best to just duplicate and edit as you see fit
 
-### `STREAMED_CHUNKING_SIZE`
+#### `STREAMED_CHUNKING_SIZE`
 
 Set to a value greater than 0 to enable streaming of sequences. Note doing this will result in executing substrings
 
-### `SQLALCHEMY_ECHO`
+#### `SQLALCHEMY_ECHO`
 
 Set to `True` to have SQLAlchemy emit the SQL it is generating. Useful to understand what's going on under the hood
 
-## Moving to a new database
+### Moving to a new database
 
 We do not recommend using SQLite in production instances. Instead you should use something like MySQL or Postgres. To do this you should:
 
@@ -92,10 +93,10 @@ We do not recommend using SQLite in production instances. Instead you should use
 Alembic can be run with the following command.
 
 ```bash
-$ REFGET_SETTINGS="path/to/new/config.py" FLASK_APP=run.py flask db upgrade
+REFGET_SETTINGS="path/to/new/config.py" FLASK_APP=run.py flask db upgrade
 ```
 
-### Populating a database with new records
+#### Populating a database with new records
 
 **Make sure you have created a new database first as noted in the previous section**. Loading is available through the `loader.py` variable. You can give this a FASTA file plus additional options (use `--help` to see all options).
 
@@ -105,7 +106,7 @@ REFGET_SETTINGS="path/to/new/config.py" poetry run python3 loader.py --fasta FIL
 
 The script writes only the sequence records and molecules to your active database. The script has been tested but not extensively.
 
-# Regenerating the local SQLite compliance database
+## Regenerating the local SQLite compliance database
 
 ```bash
 rm compliance.sqlite3
@@ -114,7 +115,7 @@ poetry run python3 create_compliance_database.py
 
 This will use the local application's default settings, which is a file in the current directory called `compliance.sqlite3`.
 
-# Creating sequence reports
+## Creating sequence reports
 
 Utilities are available to generate a report of the various supported checksums by refget in CSV format using the `fasta-to-report.py` tool. You can provide this a FASTA formatted file (gzipped or uncommpressed) and the code will output a CSV report. Additional command line options are available using `--help`.
 
@@ -126,7 +127,7 @@ NC_001422.1,ga4gh:SQ.IIXILYBQCpHdC4qpI3sOQ_HAeAm9bmeF,3332ed720ac7eaa9b3655c06f6
 VI,ga4gh:SQ.z-qJgWoacRBV77zcMgZN9E_utrdzmQsH,b7ebc601f9a7df2e1ec5863deeae88a3
 ```
 
-# Running tests
+## Running tests
 
 ```bash
 $ poetry run python -m unittest tests/*.py
@@ -137,24 +138,24 @@ Ran 9 tests in 0.286s
 OK
 ```
 
-## Test coverage
+### Test coverage
 
 ```bash
-$ poetry run coverage run -m unittest tests/*.py
-$ poetry run coverage html
-$ open htmlcov/index.html
+poetry run coverage run -m unittest tests/*.py
+poetry run coverage html
+open htmlcov/index.html
 ```
 
-# Relationship to refget-server-perl
+## Relationship to refget-server-perl
 
 [refget-server-perl](https://github.com/andrewyatz/refget-server-perl) was the first standalone open source reference implementation of the refget protocol and supports version 1 only. This implementation supports version 2 only. No migration path is offered between refget-server-perl and refget-server-python as their schemas and design differ slightly.  Specifically:
 
 - Sequence storage
-   - refget-server-perl allowed customisation of the sequence storage layer allowing metadata to be stored in a RDMBS and sequence held on disk, in a RDBMS or redis
-   - refget-server-python stores all sequence in the RDBMS alongside metadata
+  - refget-server-perl allowed customisation of the sequence storage layer allowing metadata to be stored in a RDMBS and sequence held on disk, in a RDBMS or redis
+  - refget-server-python stores all sequence in the RDBMS alongside metadata
 - Schema
-   - refget-server-perl included tables which allowed tracking of release, source species, assembly and sequence synonyms
-   - refget-server-python has a much simpler model only covering sequences, instances of those sequences (called molecules), molecule type and authority
+  - refget-server-perl included tables which allowed tracking of release, source species, assembly and sequence synonyms
+  - refget-server-python has a much simpler model only covering sequences, instances of those sequences (called molecules), molecule type and authority
 
 In summary this implementation does far less than the refget-server-perl implementation. To migrate data between the versions either re-run sequence loading into the new schema or migrate data as specified below.
 
@@ -169,7 +170,7 @@ In summary this implementation does far less than the refget-server-perl impleme
 | `release`                | None                       |                                                                                                           |
 | `synonym`                | None                       |                                                                                                           |
 
-# Creating fly deployments
+## Creating fly deployments
 
 [Fly.io](https://fly.io/) is an alternative to heroku for Platform as a Service (PaaS). We deploy the [reference deployment of the Python Refget Server v2](https://refgetv2.fly.dev/) on Fly using Docker images. This is controlled by a local [fly.toml](fly.toml) which sets up a basic server and will use the [Dockerfile](Dockerfile) to build the and run the compliance server which is pre-loaded with the following sequences:
 
@@ -179,7 +180,7 @@ In summary this implementation does far less than the refget-server-perl impleme
 
 The Docker image is built to run a flask server on `0.0.0.0:8080`, which our fly.toml is configured to map external ports to.
 
-## Making a first release
+### Making a first release
 
 ```bash
 # Log into Fly
@@ -192,13 +193,13 @@ $ flyctl init
 $ flyctl deploy
 ```
 
-## Releasing an update
+### Releasing an update
 
 ```bash
 flyctl deploy
 ```
 
-## Testing the Docker build process
+### Testing the Docker build process
 
 To initate a local build of the Docker image you can use the following commands
 
