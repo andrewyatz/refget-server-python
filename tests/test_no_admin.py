@@ -26,6 +26,7 @@ class TestConfig(object):
     SQLALCHEMY_ECHO = False
     ADMIN_INTERFACE = False
 
+
 class BaseTest(TestCase):
     def create_app(self):
         config = TestConfig()
@@ -38,7 +39,9 @@ class BaseTest(TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
-    
+
     def test_no_admin_interface(self):
-        response = self.client.get("/admin/stats", headers={"Accept": "application/json"})
+        response = self.client.get(
+            "/admin/stats", headers={"Accept": "application/json"}
+        )
         self.assertEqual(response.status_code, 404)

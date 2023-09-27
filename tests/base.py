@@ -85,5 +85,9 @@ class BaseTest(TestCase):
     ):
         range_value = f"bytes={start}-{end}"
         self.assert_basic_sequence(
-            id, status_code=status_code, content_type=content_type, seq=seq, range=range_value
+            id,
+            status_code=status_code,
+            content_type=content_type,
+            seq=seq,
+            range=range_value,
         )
