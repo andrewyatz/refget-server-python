@@ -16,8 +16,6 @@
 import app
 from flask_testing import TestCase
 from app.models import db
-import compliance.db as data
-import tests.globals as g
 
 
 class TestConfig(object):
@@ -27,7 +25,7 @@ class TestConfig(object):
     ADMIN_INTERFACE = False
 
 
-class BaseTest(TestCase):
+class NoAdminTest(TestCase):
     def create_app(self):
         config = TestConfig()
         flask_app = app.create_app(config)

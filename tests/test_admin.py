@@ -14,10 +14,35 @@
 # limitations under the License.
 
 import tests.globals as g
-import tests.base
+from app.models import db
+import app
+from flask_testing import TestCase
+import compliance.db as data
 
 
-class AdminTests(tests.base.BaseTest):
+class TestConfig(object):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+    SQLALCHEMY_ECHO = False
+    ADMIN_INTERFACE = True
+
+
+class AdminTests(TestCase):
+    def create_app(self):
+        config = TestConfig()
+        flask_app = app.create_app(config)
+        return flask_app
+
+    def setUp(self):
+        db.create_all()
+        with db.session.begin():
+            seq, mol = data.create(g.seq, g.sequence_id, g.authority, g.seq_type, False)
+            db.session.add_all([seq, mol])
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+
     def test_stats(self):
         expected = {"counts": {"seqs": 1, "molecules": 1}}
         response = self.client.get(
