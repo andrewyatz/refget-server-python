@@ -17,11 +17,13 @@ from . import models as m
 from .models import db
 from sqlalchemy import func
 from .utils import trunc512_to_ga4gh
+from .seq_store import RawSeqStore
 
 
 class Refget:
-    def __init__(self) -> None:
+    def __init__(self, seq_store=RawSeqStore()) -> None:
         self.session = db.session
+        self.seq_store = seq_store
 
     """
 	Search for a sequence by an identifier. Supports ga4gh:SQ., md5 or another CURIE formatted ID e.g. refseq:NM_001354609.2
@@ -76,7 +78,7 @@ class Refget:
         )
 
     """
-    Retrieve sequence from the raw_seq table
+    Retrieve sequence from the configured sequence store
 
     Params:
         obj: models.Seq object to query by. Can also provide a models.Molecule and code will understand this
@@ -91,37 +93,7 @@ class Refget:
             seq = obj.seq
         else:
             return None
-
-        # If we are in this situation
-        if end is not None and start > end and seq.circular:
-            subseq = self._get_sequence(seq, start, seq.size)
-            subseq_two = self._get_sequence(seq, 0, end)
-            return subseq + subseq_two
-        # Normal operation on linear sequence
-        else:
-            return self._get_sequence(seq, start=start, end=end)
-
-    def _get_sequence(self, seq, start=0, end=None):
-        # If we didn't specify anything return the sequence
-        if start == 0 and end == None:
-            rawseq = (
-                self.session.query(m.RawSeq).filter(m.RawSeq.ga4gh == seq.ga4gh).first()
-            )
-            return rawseq.seq
-        # Otherwise we need to substring
-        else:
-            if end is None:
-                end = seq.size
-            length = end - start
-            substr_start = start + 1
-            db_seq = (
-                self.session.query(
-                    func.substr(m.RawSeq.seq, substr_start, length),
-                )
-                .filter(m.RawSeq.ga4gh == seq.ga4gh)
-                .first()
-            )
-            return db_seq[0]
+        return self.seq_store.get_seq(seq, start, end)
 
     """
     Create a molecule and sub-objects from parameters
@@ -148,11 +120,7 @@ class Refget:
 
     def find_or_create_seqs(self, seq, circular=False):
         seq_obj = m.Seq.build_from_seq(seq=seq, circular=circular)
-        rawseq_instance = (
-            self.session.query(m.RawSeq).filter_by(ga4gh=seq_obj.ga4gh).first()
-        )
-        if not rawseq_instance:
-            rawseq_instance = m.RawSeq(seq=seq, ga4gh=seq_obj.ga4gh)
+        rawseq_instance = self.seq_store.store(checksum=seq_obj.ga4gh, seq=seq)
         seq_instance = (
             self.session.query(m.Seq).filter_by(ga4gh=seq_obj.ga4gh)
         ).first()

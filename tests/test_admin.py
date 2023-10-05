@@ -18,6 +18,8 @@ from app.models import db
 import app
 from flask_testing import TestCase
 import compliance.db as data
+from app.orm import Refget
+import app.seq_store as seq_store
 
 
 class TestConfig(object):
@@ -35,8 +37,12 @@ class AdminTests(TestCase):
 
     def setUp(self):
         db.create_all()
+        self.rg = Refget()
         with db.session.begin():
-            seq, mol = data.create(g.seq, g.sequence_id, g.authority, g.seq_type, False)
+            compliance = data.Compliance(rg=self.rg)
+            seq, mol = compliance.create(
+                g.seq, g.sequence_id, g.authority, g.seq_type, False
+            )
             db.session.add_all([seq, mol])
 
     def tearDown(self):

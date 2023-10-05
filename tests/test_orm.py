@@ -17,11 +17,12 @@ import tests.globals as g
 import tests.base
 import app.orm as orm
 import app.models as models
+import app.seq_store as seq_store
 
 
 class OrmTest(tests.base.BaseTest):
     def test_orm_valueset_mod(self):
-        rg = orm.Refget()
+        rg = self.rg
         with self.assertRaises(ValueError):
             authority = (
                 rg.session.query(models.Authority).filter_by(name=g.authority).first()
@@ -37,7 +38,7 @@ class OrmTest(tests.base.BaseTest):
             seq_type.name = "changed"
 
     def test_large_objs(self):
-        rg = orm.Refget()
+        rg = self.rg
         seq = rg.session.query(models.Seq).filter_by(ga4gh=g.sha512t24u).first()
         self.assertIn(g.sha512t24u, str(seq))
         self.assertIn("Seq(", str(seq))
@@ -50,7 +51,7 @@ class OrmTest(tests.base.BaseTest):
         self.assertEqual(g.sha512t24u, mol.ga4gh)
 
     def test_orm(self):
-        rg = orm.Refget()
+        rg = self.rg
         seq = rg.session.query(models.Seq).filter_by(ga4gh=g.sha512t24u).first()
         mol = rg.session.query(models.Molecule).filter_by(seq=seq).first()
         self.assertIsNone(rg.get_sequence(None))
@@ -60,7 +61,7 @@ class OrmTest(tests.base.BaseTest):
         self.assertEqual(g.sha512t24u, new_seq.ga4gh)
 
     def test_circular(self):
-        rg = orm.Refget()
+        rg = self.rg
         seq = rg.session.query(models.Seq).filter_by(ga4gh=g.sha512t24u).first()
         seq.circular = True
         circ_seq = rg.get_sequence(seq, start=3, end=1)
