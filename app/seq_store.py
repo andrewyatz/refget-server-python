@@ -113,3 +113,105 @@ class RawSeqStore(SeqStore):
                 .first()
             )
             return db_seq[0]
+
+
+"""
+Version of the RawSeq store which stores sequences as a series of blocks. By
+default we store in blocks of 134,217,728bp. You can control this by
+providing an alternative chunk_power. Calculate the size by executing 1 << chunk_power.
+
+Common sizes from their powers are:
+
+16 : 65,536
+17 : 131,072
+18 : 262,144
+19 : 524,288
+20 : 1,048,576
+21 : 2,097,152
+21 : 2,097,152
+22 : 4,194,304
+23 : 8,388,608
+24 : 16,777,216
+25 : 33,554,432
+26 : 67,108,864
+27 : 134,217,728
+28 : 268,435,456
+29 : 536,870,912
+
+Pick a value which is a good match between minimising the need to create too many chunks
+but also supported well by your database technology of choice.
+
+"""
+
+
+class ChunkedRawSeq(SeqStore):
+    def __init__(self, chunk_power=27) -> None:
+        self.chunk_power = chunk_power
+        self.session = db.session
+
+    def store(self, checksum, seq):
+        power = self.chunk_power
+        length = len(seq)
+        chunk = 1 << power
+        iterations = math.ceil(length / chunk)
+        created_chunks = []
+        for i in range(0, iterations):
+            start = chunk * i
+            end = start + chunk
+            if end > length:
+                end = length
+            seq_chunk = seq[start:end]
+            chunk_length = len(seq_chunk)
+            new_chunk = m.ChunkedRawSeq(
+                seq=seq_chunk,
+                length=chunk_length,
+                offset=start,
+                block=i,
+                ga4gh=checksum,
+            )
+            created_chunks.append(new_chunk)
+        return created_chunks
+
+    def _sub_seq(self, seq_obj, start, length):
+        power = self.chunk_power
+        substr_end = start + length
+        start_bin = start >> power
+        end_bin = substr_end >> power
+        concat_string = ""
+        for bin in range(start_bin, end_bin):
+            virtual_start = bin << power
+            virtual_end = bin + 1 << power
+            print(
+                f"bin:{bin}|v_start:{virtual_start}|v_end:{virtual_end}|substr_start:{start}|substr_end:{substr_end}"
+            )
+            if bin == start_bin:
+                local_start = start - virtual_start
+                local_length = virtual_end - start
+                if substr_end < virtual_end:
+                    local_length = length
+                concat_string += self._perform_remote_substring(
+                    seq_obj, local_start, local_length
+                )
+            elif bin == end_bin:
+                local_start = 0
+                local_length = substr_end - virtual_start
+                concat_string += self._perform_remote_substring(
+                    seq_obj, local_start, local_length
+                )
+            else:
+                # we can just grab the entire seq and concat
+                concat_string += self._perform_remote_substring(
+                    seq_obj, 0, (1 << power)
+                )
+        return concat_string
+
+    def _perform_remote_substring(self, seq_obj, start, length):
+        substr_start = start + 1
+        db_seq = (
+            self.session.query(
+                func.substr(m.ChunkedRawSeq.seq, substr_start, length),
+            )
+            .filter(m.ChunkedRawSeq.ga4gh == seq_obj.ga4gh)
+            .first()
+        )
+        return db_seq[0]

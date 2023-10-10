@@ -47,6 +47,17 @@ class RawSeq(db.Model):
     )
 
 
+class ChunkedRawSeq(db.Model):
+    __tablename__ = "chunked_raw_seq"
+    ga4gh = Column(String(32), primary_key=True)
+    seq = Column(
+        Text(1000000000).with_variant(mysql.LONGTEXT(), "mysql"), nullable=False
+    )
+    offset = Column(Integer, nullable=False)
+    block = Column(Integer, nullable=False)
+    length = Column(Integer, nullable=False)
+
+
 class Seq(db.Model):
     __tablename__ = "seq"
 
