@@ -41,7 +41,7 @@ This will give you access to the server locally on port 5000 and has four sequen
 - `NC_001422.1` (Escherichia phage phiX174): `ga4gh:SQ.IIXILYBQCpHdC4qpI3sOQ_HAeAm9bmeF` & MD5 `3332ed720ac7eaa9b3655c06f6b9e196`
 - `BK006935.2` (Saccharomyces cerevisiae S288C chromosome I): `ga4gh:SQ.lZyxiD_ByprhOUzrR1o1bq0ezO_1gkrn` & MD5 `6681ac2f62509cfc220d78751b8dc524`
 - `BK006940.2` (Saccharomyces cerevisiae S288C chromosome VI): `ga4gh:SQ.z-qJgWoacRBV77zcMgZN9E_utrdzmQsH` & MD5 `b7ebc601f9a7df2e1ec5863deeae88a3`
-- `ACGT`: `ga4gh:SQ.aKF498dAxcJAqme6QYQ7EZ07-fiw8Kw2` & MD5 `ga4gh:SQ.f1f8f4bf413b16ad135722aa4591043e`
+- `ACGT`: `ga4gh:SQ.aKF498dAxcJAqme6QYQ7EZ07-fiw8Kw2` & MD5 `f1f8f4bf413b16ad135722aa4591043e`
 
 These are held in the `db.sqlite` database. You can retrieve these sequences with the following types of comamnds:
 
@@ -55,6 +55,45 @@ $ curl -s -H"Accept: application/json" "http://0.0.0.0:5000/sequence/3332ed720ac
 $ curl -s -H"Accept: application/json" "http://0.0.0.0:5000/sequence/insdc:NC_001422.1/metadata"
 {"metadata":{"aliases":[{"alias":"NC_001422.1","naming_authority":"insdc"}],"ga4gh":"ga4gh:SQ.IIXILYBQCpHdC4qpI3sOQ_HAeAm9bmeF","id":"ga4gh:SQ.IIXILYBQCpHdC4qpI3sOQ_HAeAm9bmeF","length":5386,"md5":"3332ed720ac7eaa9b3655c06f6b9e196"}}
 ```
+
+## Unofficial extensions to refget
+
+The server has a number of extensions to the standard refget spec detailed below.
+
+_You can turn on these extensions using the configuration variable `UNOFFICIAL_EXTENSIONS` and setting it to `True`._
+
+### Requesting multiple metadata payloads
+
+The server can provide multiple payloads of metadata through the POST endpoint `/sequence/metadata`.
+
+```bash
+$ curl -X POST -s -H"Accept: application/json" "http://0.0.0.0:5000/sequence/metadata
+   -H 'Content-Type: application/json'
+   -d '{"ids":["ga4gh:SQ.IIXILYBQCpHdC4qpI3sOQ_HAeAm9bmeF","insdc:NC_001422.1",bogus"]}'
+{"metadata":{"ids":["id1","id2",id3"],"metadata":[{"aliases":[{"alias":"NC_001422.1","naming_authority":"insdc"}],"ga4gh":"ga4gh:SQ.IIXILYBQCpHdC4qpI3sOQ_HAeAm9bmeF","id":"ga4gh:SQ.IIXILYBQCpHdC4qpI3sOQ_HAeAm9bmeF","length":5386,"md5":"3332ed720ac7eaa9b3655c06f6b9e196"},{"aliases":[{"alias":"NC_001422.1","naming_authority":"insdc"}],"ga4gh":"ga4gh:SQ.IIXILYBQCpHdC4qpI3sOQ_HAeAm9bmeF","id":"ga4gh:SQ.IIXILYBQCpHdC4qpI3sOQ_HAeAm9bmeF","length":5386,"md5":"3332ed720ac7eaa9b3655c06f6b9e196"},null]}}
+```
+
+The request is structured as follows:
+
+```json
+{
+    "ids" : ["ga4gh:SQ.aKF498dAxcJAqme6QYQ7EZ07-fiw8Kw2","bogus"]
+}
+```
+
+The response is structured as follows:
+
+```json
+{
+    "ids" : ["ga4gh:SQ.aKF498dAxcJAqme6QYQ7EZ07-fiw8Kw2","bogus"],
+    "metadata" : [
+        { "aliases" : [], "ga4gh":"ga4gh:SQ.aKF498dAxcJAqme6QYQ7EZ07-fiw8Kw2", "length": 4, "md5" : "f1f8f4bf413b16ad135722aa4591043e" },
+        null
+    ]
+}
+```
+
+Where an ID cannot be resolved, we return a null value. The order of IDs processed will be returned in the `ids` array in the JSON response.
 
 ## Customising the instance
 
@@ -78,11 +117,15 @@ Set to a value greater than 0 to enable streaming of sequences. Note doing this 
 
 #### `SQLALCHEMY_ECHO`
 
-Set to `True` to have SQLAlchemy emit the SQL it is generating. Useful to understand what's going on under the hood
+Set to `True` to have SQLAlchemy emit the SQL it is generating. Useful to understand what's going on under the hood. Default is `False`.
 
 #### `ADMIN_INTERFACE`
 
-Set to `True` to enable the internal admin interface. Currently admin has only one endpoint `/admin/stats` which reports counts of the sequences and molecules available.
+Set to `True` to enable the internal admin interface. Currently admin has only one endpoint `/admin/stats` which reports counts of the sequences and molecules available. Default is `False`.
+
+#### `UNOFFICIAL_EXTENSIONS`
+
+Set to `True` to enable the unofficial extensions. Default is `True`.
 
 ### Moving to a new database
 

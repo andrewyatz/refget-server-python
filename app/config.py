@@ -89,3 +89,5 @@ class Config:
     }
 
     ADMIN_INTERFACE = False
+
+    UNOFFICIAL_EXTENSIONS = True

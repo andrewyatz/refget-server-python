@@ -46,6 +46,29 @@ class SequenceTests(tests.base.BaseTest):
             id=g.ga4gh, status_code=406, content_type="plain/text"
         )
 
+    def test_post_metadata(self):
+        ids = [g.md5, g.ga4gh, "bogus"]
+        expected = {
+            "md5": g.md5,
+            "ga4gh": g.sq,
+            "length": len(g.seq),
+            "aliases": [{"alias": g.sequence_id, "naming_authority": g.authority}],
+        }
+        response = self.client.post(
+            "/sequence/metadata",
+            headers={"Accept": "application/json"},
+            json={"ids": ids},
+        )
+        data = response.json["metadata"]
+        self.assertEqual(len(data["metadata"]), 3)
+        # Check IDs array is as expected
+        self.assertEqual(data["ids"], ids)
+        # Check response of valid queries are as expected
+        self.assertEqual(data["metadata"][0], expected)
+        self.assertEqual(data["metadata"][1], expected)
+        # Third element metadata returned is None
+        self.assertEqual(data["metadata"][2], None)
+
 
 if __name__ == "__main__":
     import unittest

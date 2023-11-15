@@ -33,6 +33,7 @@ refget_blueprint = Blueprint("refget_blueprint", __name__)
 INVALID_INPUT = "Invalid input"
 RANGE_NS = "Range Not Satisfiable"
 BAD_REQUEST = "Bad Request"
+INVALID_ENCODING = "Invalid encoding"
 
 
 @refget_blueprint.route("/")
@@ -89,7 +90,7 @@ def sequence(id):
         current_app.config["ACCEPTED_SEQUENCE_VND"]
     )
     if not mimetype:
-        return "Invalid encoding", 406
+        return INVALID_ENCODING, 406
 
     # Have a header but not range object, range is bad
     raw_range = request.headers.get("range")
@@ -174,16 +175,20 @@ def sequence(id):
 
 @refget_blueprint.route("/sequence/<id>/metadata", methods=["GET"])
 def metadata(id):
-    accept_match = request.accept_mimetypes.best_match(
-        current_app.config["ACCEPTED_METADATA_VND"]
-    )
+    accept_match = _get_accept_match()
     if not accept_match:
-        return "Invalid encoding", 406
+        return INVALID_ENCODING, 406
+    data = _get_metadata(id, accept_match)
+    if data == None:
+        return "Not Found", 404
+    return jsonify({"metadata": data})
 
+
+def _get_metadata(id, accept_match):
     rg = Refget()
     obj = rg.find_by_id(id)
     if obj == None:
-        return "Not Found", 404
+        return None
 
     data = {
         "length": obj.size,
@@ -197,6 +202,28 @@ def metadata(id):
 
     data["aliases"] = list(map(_create_aliases, obj.molecules))
 
+    return data
+
+
+def _get_accept_match():
+    return request.accept_mimetypes.best_match(
+        current_app.config["ACCEPTED_METADATA_VND"]
+    )
+
+
+@refget_blueprint.route("/sequence/metadata", methods=["POST"])
+def metadata_post():
+    accept_match = _get_accept_match()
+    if not accept_match:
+        return INVALID_ENCODING, 406
+    json = request.json
+    data = {"ids": [], "metadata": []}
+    if "ids" in json:
+        for id in json["ids"]:
+            data["ids"].append(id)
+            data["metadata"].append(_get_metadata(id, accept_match=accept_match))
+    else:
+        return "Bad request", 400
     return jsonify({"metadata": data})
 
 
