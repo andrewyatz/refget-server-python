@@ -67,8 +67,12 @@ class OrmTest(tests.base.BaseTest):
         circ_seq = rg.get_sequence(seq, start=3, end=1)
         self.assertEqual(g.seq[-1] + g.seq[0], circ_seq)
 
+    def test_rawseq(self):
+        rg = self.rg
+        raw_seq = rg.session.query(models.RawSeq).filter_by(ga4gh=g.sha512t24u).first()
+        self.assertEqual(g.sha512t24u, raw_seq.ga4gh)
+        self.assertEqual(g.seq, raw_seq.seq)
 
 if __name__ == "__main__":
     import unittest
-
     unittest.main()

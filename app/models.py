@@ -28,6 +28,7 @@ from sqlalchemy.orm import (
     declarative_base,
     relationship,
     validates,
+    deferred
 )
 from flask_sqlalchemy import SQLAlchemy
 
@@ -42,9 +43,9 @@ db = SQLAlchemy()
 class RawSeq(db.Model):
     __tablename__ = "raw_seq"
     ga4gh = Column(String(32), primary_key=True)
-    seq = Column(
+    seq = deferred(Column(
         Text(4000000000).with_variant(mysql.LONGTEXT(), "mysql"), nullable=False
-    )
+    ))
 
 
 class Seq(db.Model):
