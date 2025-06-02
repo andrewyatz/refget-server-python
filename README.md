@@ -217,34 +217,14 @@ In summary this implementation does far less than the refget-server-perl impleme
 | `release`                | None                       |                                                                                                           |
 | `synonym`                | None                       |                                                                                                           |
 
-## Creating fly deployments
-
-[Fly.io](https://fly.io/) is an alternative to heroku for Platform as a Service (PaaS). We deploy the [reference deployment of the Python Refget Server v2](https://refgetv2.fly.dev/) on Fly using Docker images. This is controlled by a local [fly.toml](fly.toml) which sets up a basic server and will use the [Dockerfile](Dockerfile) to build the and run the compliance server which is pre-loaded with the following sequences:
+## Docker compliance images
+Our shipped [Dockerfile](Dockerfile) is configured to create a compliant server pre-loaded with the following sequences:
 
 - BK006935.2 (md5:6681ac2f62509cfc220d78751b8dc524): _S.cer_ chromosome I
 - BK006940.2 (md5:b7ebc601f9a7df2e1ec5863deeae88a3): _S.cer_ chromosome IV
 - NC_001422.1 (md5:3332ed720ac7eaa9b3655c06f6b9e196): _Enterobacteria phage phiX174 sensu lato_
 
-The Docker image is built to run a flask server on `0.0.0.0:8080`, which our fly.toml is configured to map external ports to.
-
-### Making a first release
-
-```bash
-# Log into Fly
-$ flyctl auth login
-
-# Initalise
-$ flyctl init
-
-# Finally deploy the application
-$ flyctl deploy
-```
-
-### Releasing an update
-
-```bash
-flyctl deploy
-```
+The Docker image is built to run a flask server on `0.0.0.0:8080`.
 
 ### Testing the Docker build process
 
